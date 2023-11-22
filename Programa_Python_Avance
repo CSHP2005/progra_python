@@ -1,0 +1,53 @@
+# Librería para serializar json
+import pickle
+
+repositorio_pickle = pickle.dumps(repositorio)
+
+print(repositorio_pickle)
+
+nuevo_objeto=pickle.loads(repositorio_pickle)
+
+print(repositorio==nuevo_objeto)
+
+import pickle
+import os
+
+class archivador:
+    objeto=''
+    archivo='sin_nombre.pickle'
+    respaldar=False
+
+    def __init__(self,objeto='',archivo='',respaldar=False):
+        self.objeto=objeto
+        self.archivo=archivo
+        self.respaldar=respaldar
+
+    def guardar_archivo(self,
+                        objeto='',
+                        archivo='sin_nombre.pickle',
+                        respaldar=False):
+        try:
+            if self.respaldar:
+                nombre_bak=self.archivo.split('.')[0]+'.bak'
+                if os.path.exists(archivo):
+                    if (os.path.exists(nombre_bak)):
+                        os.remove(nombre_bak)
+                        os.rename(archivo,nombre_bak)
+            # Se genera la versión serializada del objeto.
+            with open(archivo,"wb+") as f:
+                pickle.dump(objeto,f)
+        except:
+            # Si algo sale mal, retorna False (no fue posible)
+            # y un str vacío.
+            return False
+        # Si pudo hacer la operación, retorna True.
+        return True
+
+    def leer_archivo(self,archivo):
+        try:
+            with open(archivo,"rb") as f:
+                datos_recuperados=pickle.load(f)
+        except:
+            return False,''
+        # Si todo salió bien, retorna verdadero, y los datos.
+        return True, datos_recuperados
